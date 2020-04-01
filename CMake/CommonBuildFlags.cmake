@@ -78,14 +78,17 @@ function(common_buildflags_set)
 
   # ------------
 
-  # Build all targets with '-fPIC'/'-fPIE' by default, including static libs
-  set(CMAKE_POSITION_INDEPENDENT_CODE ON PARENT_SCOPE)
+  if (NOT MSYS)
+	# Build all targets with '-fPIC'/'-fPIE' by default, including static libs
+	# except for Windows MSYS2: https://github.com/msys2/MINGW-packages/issues/4100
+	set(CMAKE_POSITION_INDEPENDENT_CODE ON PARENT_SCOPE)
 
-  # FIXME CMake doesn't link executables with '-pie', even if
-  #       CMAKE_POSITION_INDEPENDENT_CODE is ON.
-  #       See: CMake issue #14983 (https://gitlab.kitware.com/cmake/cmake/issues/14983)
-  #       Affects CMake 3.5.1 (Ubuntu 16.04 Xenial)
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie" PARENT_SCOPE)
+	# FIXME CMake doesn't link executables with '-pie', even if
+	#       CMAKE_POSITION_INDEPENDENT_CODE is ON.
+	#       See: CMake issue #14983 (https://gitlab.kitware.com/cmake/cmake/issues/14983)
+	#       Affects CMake 3.5.1 (Ubuntu 16.04 Xenial)
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie" PARENT_SCOPE)
+  endif (NOT MSYS)
 
   # ------------
 
